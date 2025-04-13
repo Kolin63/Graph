@@ -30,10 +30,10 @@ namespace kolin
 
         // Returns a one-dimensional index given a two-dimensional coordinate which can be used to index the body string
         // Note: (0, 0) is the top-left corner
-        std::uint32_t coord_to_index(std::uint32_t x, std::uint32_t y) const;
+        std::uint32_t coord_to_index(std::uint32_t x, std::uint32_t y, std::uint32_t start_x) const;
         // Sets a character in the body given a two-dimensional coordinate
         // Note: (0, 0) is the top-left corner
-        void set_coord(std::uint32_t x, std::uint32_t y, char c);
+        void set_coord(std::uint32_t x, std::uint32_t y, char c, std::uint32_t start_x);
 
     public:
         enum error {
@@ -64,7 +64,7 @@ namespace kolin
         // Does not include \n or \0
         std::uint32_t get_width() const { return m_width; }
         // Re-calculates the value but does not store it
-        std::uint32_t get_col_width() const;
+        std::uint32_t get_col_width(std::uint32_t start_x) const;
 
         // How tall the graph is in characters
         void set_height(std::uint32_t height) { m_height = height; }
