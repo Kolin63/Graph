@@ -10,7 +10,9 @@ int main()
         { 0, 5 }, { 1, 4 }, { 2, 3 }, { 3, 2 }, { 4, 1 }, { 5, 0 }
     };
 
-    kolin::graph graph{ 10, 20, data };
+    kolin::graph graph{ 20, 20, data };
+
+    std::cout << graph.make_body();
 
     return 0;
 }

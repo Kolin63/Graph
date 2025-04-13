@@ -39,7 +39,7 @@ namespace kolin
         std::string get_body() const { return m_body; }
 
         // Makes the body of the graph with the given interval and returns it
-        std::string make_body(std::uint32_t int_x = 1, std::uint32_t int_y = 1);
+        std::string make_body(std::uint32_t int_x = 1, std::uint32_t int_y = 1, std::uint32_t start_x = 0);
 
         // Returns a one-dimensional index given a two-dimensional coordinate which can be used to index the body string
         // Note: (0, 0) is the bottom-left corner, or the origin, of the graph
@@ -55,14 +55,14 @@ namespace kolin
         // Does not include \n or \0
         std::uint32_t get_width() const { return m_width; }
         // Re-calculates the value but does not store it
-        std::size_t get_col_width() const;
+        std::uint32_t get_col_width() const;
 
         // How tall the graph is in characters
         void set_height(std::uint32_t height) { m_height = height; }
         // How tall the graph is in characters
         std::uint32_t get_height() const { return m_height; }
         // Re-calculates the value but does not store it
-        std::size_t get_row_num_width() const;
+        std::uint32_t get_row_num_width() const;
     };
 }
 
