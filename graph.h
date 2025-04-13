@@ -13,9 +13,14 @@ namespace kolin
         // The body of the graph, which can be printed to display it
         std::string m_body{};
 
+    public:
         // The data of the graph, where the first of the pair is the x-coordinate 
         // and the second of the pair is the y-coordinate
-        std::vector<std::pair<std::uint32_t, std::uint32_t>> m_data{};
+        using dataset = std::vector<std::pair<std::uint32_t, std::uint32_t>>;
+    private:
+        // The data of the graph, where the first of the pair is the x-coordinate 
+        // and the second of the pair is the y-coordinate
+        dataset m_data{};
 
         // How wide the graph is in characters
         // Does not include \n or \0
@@ -31,7 +36,7 @@ namespace kolin
         void set_coord(std::uint32_t x, std::uint32_t y, char c);
 
     public:
-        graph(std::uint32_t width, std::uint32_t height, std::vector<std::pair<std::uint32_t, std::uint32_t>> data)
+        graph(std::uint32_t width, std::uint32_t height, const dataset& data)
             : m_width{ width }, m_height{ height }, m_data{ data }
         { }
 
