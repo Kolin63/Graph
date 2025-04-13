@@ -9,7 +9,8 @@ std::uint32_t kolin::graph::coord_to_index(std::uint32_t x, std::uint32_t y) con
 
     //std::cout << '(' << x << ", " << y << "), " << index << '\n';
 
-    if (index > m_body.size()) index = static_cast<std::uint32_t>(m_body.size()) - 1;
+    if (index > m_body.size())
+        throw out_of_range;
 
     return index;
 }
@@ -38,7 +39,11 @@ std::string kolin::graph::make_body(std::uint32_t int_x, std::uint32_t int_y, st
 
     // Sets the data points
     for (const auto& point : m_data) {
-        set_point(point.first, point.second, '#');
+        try {
+            set_point(point.first, point.second, '#');
+        }
+        // if there is an error we simply do not set that point
+        catch (kolin::graph::error) {}
     }
 
     return m_body; 
@@ -46,7 +51,8 @@ std::string kolin::graph::make_body(std::uint32_t int_x, std::uint32_t int_y, st
 
 std::uint32_t kolin::graph::point_to_index(std::uint32_t x, std::uint32_t y, std::uint8_t int_x, std::uint8_t int_y, std::uint32_t start_x) const
 {
-    assert(x >= start_x && "x cannot be less than start x");
+    if (x < start_x)
+        throw out_of_range;
 
     //std::cout << '(' << x << ", " << y << ") -> ";
 

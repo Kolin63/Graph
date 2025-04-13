@@ -36,6 +36,10 @@ namespace kolin
         void set_coord(std::uint32_t x, std::uint32_t y, char c);
 
     public:
+        enum error {
+            out_of_range,
+        };
+
         graph(std::uint32_t width, std::uint32_t height, const dataset& data)
             : m_width{ width }, m_height{ height }, m_data{ data }
         { }
