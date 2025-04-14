@@ -7,8 +7,6 @@ std::uint32_t kolin::graph::coord_to_index(std::uint32_t x, std::uint32_t y, std
     // Adding 1 to the width is to account for any \n characters
     std::uint32_t index{ y * (get_row_num_width() + 1 + m_width * get_col_width(int_x, start_x)) + x - 1 };
 
-    //std::cout << '(' << x << ", " << y << "), " << index << '\n';
-
     if (index > m_body.size())
         throw out_of_range;
 
@@ -101,8 +99,6 @@ std::uint32_t kolin::graph::point_to_index(std::uint32_t x, std::uint32_t y, std
 {
     if (x < start_x) throw kolin::graph::out_of_range;
     if (y < start_y) throw kolin::graph::out_of_range;
-
-    //std::cout << '(' << x << ", " << y << ") -> ";
 
     const std::uint32_t gx{ get_col_width(int_x, start_x) * ((x / int_x) - start_x + 1) + (get_row_num_width()) };
     const std::uint32_t gy{ get_height() - (y / int_y) - 1 + start_y };
