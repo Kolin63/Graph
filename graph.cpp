@@ -1,5 +1,6 @@
-#include <cassert>
 #include <iostream>
+#include <cmath>
+#include <algorithm>
 #include "graph.h"
 
 std::uint32_t kolin::graph::coord_to_index(std::uint32_t x, std::uint32_t y, std::uint8_t int_x, std::uint32_t start_x) const
@@ -61,6 +62,57 @@ kolin::graph::dataset kolin::graph::average_dataset(const kolin::graph::dataset&
     return avg;
 }
 
+std::function<std::uint32_t(std::uint32_t x)> kolin::graph::make_linear(const point& p, const point& q)
+{
+    // Solve for slope with (y2 - y1) / (x2 - x1)
+    const double m{ (static_cast<double>(q.second) - p.second) / (static_cast<double>(q.first) - p.first) };
+
+    // Solve for y-intercept with b = y - mx
+    const double b{ p.second - m * p.first };
+
+    // Make the lambda
+    return [m, b](std::uint32_t x) {
+        return static_cast<std::uint32_t>(std::round(m * x + b));
+        };
+}
+
+void kolin::graph::draw_lines(std::uint8_t int_x, std::uint8_t int_y, std::uint32_t start_x, std::uint32_t start_y)
+{
+    // 1 point means no lines
+    if (m_data.size() == 1) return;
+
+    using point = kolin::graph::point;
+
+    dataset data{ average_dataset(m_data, m_width, int_x, int_y, start_x) };
+
+    // Sort the data by x-values, least to greatest
+    std::sort(data.begin(), data.end(), [](const point& a, const point& b) { return a.first < b.first; });
+
+    // Value that can be added to or subtracted from an indice to change its y-position
+    // Adding 2 is to account for the pipe on the left and the \n on the right
+    const std::uint32_t y_diff{ m_width + get_row_num_width() + 2 };
+
+    for (std::size_t i{}; i < data.size() - 1; ++i) {
+        // References for easier typing
+        const point& p{ data[i] };
+        const point& q{ data[i + 1] };
+
+        // Gets the string indices of the points
+        const std::uint32_t pi{ point_to_index(p.first, p.second, int_x, int_y, start_x, start_y) };
+        //const std::uint32_t qi{ point_to_index(q.first, q.second, int_x, int_y, start_x, start_y) };
+
+        const auto func{ make_linear(p, q) };
+
+        // Draw the line between points p and q
+        for (std::uint32_t x{ p.first }; x <= q.first; ++x) {
+            //const std::uint32_t y = func(x);
+            try {
+                m_body.at(pi - y_diff) = '*';
+            } catch(std::out_of_range) {}
+        }
+    }
+}
+
 std::string kolin::graph::make_body(std::uint8_t int_x, std::uint8_t int_y, std::uint32_t start_x, std::uint32_t start_y)
 {
     // Interval may not be 0
@@ -82,6 +134,12 @@ std::string kolin::graph::make_body(std::uint8_t int_x, std::uint8_t int_y, std:
         std::string num{ std::to_string(i * int_x + start_x) };
         m_body += std::string(get_col_width(int_x, start_x) - num.size(), ' ') + num;
     }
+
+    // Draw Lines
+    try {
+        draw_lines(int_x, int_y, start_x, start_y);
+    }
+    catch (kolin::graph::error) {}
 
     // Sets the data points
     for (const auto& point : average_dataset(m_data, m_width, int_x, int_y, start_x)) {

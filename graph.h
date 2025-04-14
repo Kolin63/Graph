@@ -2,8 +2,8 @@
 #define KOLIN63_GRAPH_H
 
 #include <string>
-#include <string_view>
 #include <vector>
+#include <functional>
 
 namespace kolin
 {
@@ -41,6 +41,13 @@ namespace kolin
         // Takes a dataset of kolin::graph::points and averages it 
         // into a dataset based on the interval and width of the graph 
         static dataset average_dataset(const dataset& data, std::uint32_t width, std::uint8_t int_x, std::uint8_t int_y, std::uint32_t start_x);
+
+        // Takes two points and returns a linear equation that passes
+        // through the two points
+        static std::function<std::uint32_t(std::uint32_t x)> make_linear(const point& a, const point& b);
+
+        // Draws lines between points given a dataset
+        void draw_lines(std::uint8_t int_x, std::uint8_t int_y, std::uint32_t start_x, std::uint32_t start_y);
 
     public:
         enum error {
