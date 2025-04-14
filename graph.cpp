@@ -103,7 +103,7 @@ std::uint32_t kolin::graph::point_to_index(std::uint32_t x, std::uint32_t y,
     if (y < start_y) throw kolin::graph::out_of_range;
 
     const std::uint32_t gx{ get_col_width(int_x, start_x) * ((x / int_x) - start_x + 1) + (get_row_num_width()) };
-    const std::uint32_t gy{ get_height() - (y / int_y) - 1 + start_y };
+    const std::uint32_t gy{ get_height() - (y / int_y) - 1 + (start_y / int_y) };
 
     return coord_to_index(gx, gy, int_x, start_x);
 }
