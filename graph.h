@@ -33,10 +33,10 @@ namespace kolin
 
         // Returns a one-dimensional index given a two-dimensional coordinate which can be used to index the body string
         // Note: (0, 0) is the top-left corner
-        std::uint32_t coord_to_index(std::uint32_t x, std::uint32_t y, std::uint32_t start_x) const;
+        std::uint32_t coord_to_index(std::uint32_t x, std::uint32_t y, std::uint8_t int_x, std::uint32_t start_x) const;
         // Sets a character in the body given a two-dimensional coordinate
         // Note: (0, 0) is the top-left corner
-        void set_coord(std::uint32_t x, std::uint32_t y, char c, std::uint32_t start_x);
+        void set_coord(std::uint32_t x, std::uint32_t y, char c, std::uint8_t int_x, std::uint32_t start_x);
 
         // Takes a dataset of kolin::graph::points and averages it 
         // into a dataset based on the interval and width of the graph 
@@ -72,7 +72,7 @@ namespace kolin
         // Does not include \n or \0
         std::uint32_t get_width() const { return m_width; }
         // Re-calculates the value but does not store it
-        std::uint32_t get_col_width(std::uint32_t start_x) const;
+        std::uint32_t get_col_width(std::uint8_t int_x, std::uint32_t start_x) const;
 
         // How tall the graph is in characters
         void set_height(std::uint32_t height) { m_height = height; }
