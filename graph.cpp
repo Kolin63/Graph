@@ -97,17 +97,37 @@ void kolin::graph::draw_lines(std::uint8_t int_x, std::uint8_t int_y, std::uint3
         const point tp{ point_to_coord(p.first, p.second, int_x, int_y, start_x, start_y) };
         const point tq{ point_to_coord(q.first, q.second, int_x, int_y, start_x, start_y) };
 
-        // Out of bounds check
-        if (tq.first > get_row_num_width() + 1 + get_col_width(int_x, start_x) * m_width) continue;
-        //if (tp.second >= start_y + m_height * int_y || tq.second >= start_y + m_height * int_y) continue;
-
         // This function will return an integer y-value when given a double x-value
         const auto func{ make_linear(tp, tq) };
 
         // For each character between the two points
         for (std::uint32_t x{ tp.first }; x < tq.first; ++x) {
-            const std::uint32_t y{ func(x) };
-            set_coord(x, y, '*', int_x, start_x);
+
+            std::uint32_t ya{ func(x) };
+            std::uint32_t yb{ func(x + 1) };
+
+            constexpr char c{ '.' };
+
+            auto sc = [&x, &c, &int_x, &start_x, this](std::uint32_t ya) {
+                set_coord(x, ya, c, int_x, start_x);
+                };
+
+            // Below, positive slope
+            if (ya > yb) {
+                for (ya; ya > yb; --ya) {
+                    sc(ya);
+                }
+            }
+            // Above, negative slope
+            else if (ya < yb) {
+                for (ya; ya < yb; ++ya) {
+                    sc(ya);
+                }
+            }
+            // Equal, zero slope
+            else {
+                sc(ya);
+            }
         }
     }
 }
