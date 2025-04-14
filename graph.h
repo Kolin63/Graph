@@ -14,9 +14,12 @@ namespace kolin
         std::string m_body{};
 
     public:
+        // Represents a point on the graph, where teh first of the pair is the 
+        // x-coordinate and the second of the pair is the y-coordinate
+        using point = std::pair<std::uint32_t, std::uint32_t>;
         // The data of the graph, where the first of the pair is the x-coordinate 
         // and the second of the pair is the y-coordinate
-        using dataset = std::vector<std::pair<std::uint32_t, std::uint32_t>>;
+        using dataset = std::vector<point>;
     private:
         // The data of the graph, where the first of the pair is the x-coordinate 
         // and the second of the pair is the y-coordinate
