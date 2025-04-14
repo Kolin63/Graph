@@ -37,7 +37,7 @@ namespace kolin
 
         // Takes a dataset of kolin::graph::points and averages it 
         // into a dataset based on the interval and width of the graph 
-        static dataset average_dataset(const dataset& data, std::uint32_t width, std::uint32_t start_x, std::uint8_t int_x, std::uint8_t int_y);
+        static dataset average_dataset(const dataset& data, std::uint32_t width, std::uint8_t int_x, std::uint8_t int_y, std::uint32_t start_x);
 
     public:
         enum error {

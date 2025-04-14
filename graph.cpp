@@ -20,19 +20,16 @@ void kolin::graph::set_coord(std::uint32_t x, std::uint32_t y, char c, std::uint
     m_body[coord_to_index(x, y, start_x)] = c;
 }
 
-kolin::graph::dataset kolin::graph::average_dataset(const kolin::graph::dataset& data, std::uint32_t width, std::uint32_t start_x, std::uint8_t int_x, std::uint8_t int_y)
+kolin::graph::dataset kolin::graph::average_dataset(const kolin::graph::dataset& data, 
+                                                    std::uint32_t width, 
+                                                    std::uint8_t int_x, std::uint8_t int_y, 
+                                                    std::uint32_t start_x)
 {
     // No need to average anything if the intervals are 1
     if (int_x == 1 && int_y == 1) return data;
 
-    // Where the first element of the tuple is the column, the second element is N (amount of numbers added), 
-    // and the third element is the sum of all the numbers
-    std::vector<std::tuple<std::uint32_t, std::uint8_t, std::uint32_t>> total(width);
-
-    // Set the column numbers 
-    for (std::uint32_t i{}; i < total.size(); ++i) {
-        std::get<0>(total[i]) = i * int_x;
-    }
+    // Where the first is N and the second is the sum
+    std::vector<std::pair<std::uint8_t, std::uint32_t>> total(width);
 
     // Put the points from data into the total vector so that it can be averaged
     for (const auto& point : data) {
@@ -41,25 +38,26 @@ kolin::graph::dataset kolin::graph::average_dataset(const kolin::graph::dataset&
         const std::uint32_t ry{ point.second - point.second % int_y };
 
         // X Coordinate Translated to the Columns
-        const std::uint32_t i{ rx / int_x };
+        const std::uint32_t i{ rx / int_x - start_x };
 
         // Out of bounds check
-        if (i >= total.size()) continue;
+        if (i >= total.size() || i < 0 || i > width) continue;
 
         // Increment N
-        ++std::get<1>(total[i]);
+        ++total[i].first;
 
         // Add the point's Y-Position to the total
-        std::get<2>(total[i]) += ry;
+        total[i].second += ry;
     }
 
     // Make a new dataset where the averaged points will be put
-    dataset avg(width / int_x);
+    dataset avg(width);
 
     // Average the total vector into the final dataset
     for (std::uint32_t i{}; i < total.size(); ++i) {
+        if (total[i].first == 0) continue;
         avg[i].first = i * int_x;
-        avg[i].second = std::get<2>(total[i]) / std::get<1>(total[i]);
+        avg[i].second = total[i].second / total[i].first;
     }
 
     return avg;
@@ -88,7 +86,7 @@ std::string kolin::graph::make_body(std::uint8_t int_x, std::uint8_t int_y, std:
     }
 
     // Sets the data points
-    for (const auto& point : average_dataset(m_data, m_width, int_x, int_y)) {
+    for (const auto& point : average_dataset(m_data, m_width, int_x, int_y, start_x)) {
         try {
             set_point(point.first, point.second, '#', int_x, int_y, start_x, start_y);
         }
