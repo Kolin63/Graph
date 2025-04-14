@@ -64,6 +64,9 @@ namespace kolin
         // Makes the body of the graph with the given interval and returns it
         std::string make_body(std::uint8_t int_x = 1, std::uint8_t int_y = 1, std::uint32_t start_x = 0, std::uint32_t start_y = 0);
 
+        // Returns a two-dimensional coordinate relative to the top-left corner of the graph given a 
+        // coordinate relative to the bottom-let corner of the graph
+        point point_to_coord(std::uint32_t x, std::uint32_t y, std::uint8_t int_x = 1, std::uint8_t int_y = 1, std::uint32_t start_x = 1, std::uint32_t start_y = 1) const;
         // Returns a one-dimensional index given a two-dimensional coordinate which can be used to index the body string
         // Note: (0, 0) is the bottom-left corner, or the origin, of the graph
         std::uint32_t point_to_index(std::uint32_t x, std::uint32_t y, std::uint8_t int_x = 1, std::uint8_t int_y = 1, std::uint32_t start_x = 1, std::uint32_t start_y = 1) const;

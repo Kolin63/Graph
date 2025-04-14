@@ -88,27 +88,26 @@ void kolin::graph::draw_lines(std::uint8_t int_x, std::uint8_t int_y, std::uint3
     // Sort the data by x-values, least to greatest
     std::sort(data.begin(), data.end(), [](const point& a, const point& b) { return a.first < b.first; });
 
-    // Value that can be added to or subtracted from an indice to change its y-position
-    // Adding 2 is to account for the pipe on the left and the \n on the right
-    const std::uint32_t y_diff{ m_width + get_row_num_width() + 2 };
-
     for (std::size_t i{}; i < data.size() - 1; ++i) {
         // References for easier typing
         const point& p{ data[i] };
         const point& q{ data[i + 1] };
 
-        // Gets the string indices of the points
-        const std::uint32_t pi{ point_to_index(p.first, p.second, int_x, int_y, start_x, start_y) };
-        //const std::uint32_t qi{ point_to_index(q.first, q.second, int_x, int_y, start_x, start_y) };
+        // Points relative to the top-left corner of the graph
+        const point tp{ point_to_coord(p.first, p.second, int_x, int_y, start_x, start_y) };
+        const point tq{ point_to_coord(q.first, q.second, int_x, int_y, start_x, start_y) };
 
-        const auto func{ make_linear(p, q) };
+        // Out of bounds check
+        if (tq.first > get_row_num_width() + 1 + get_col_width(int_x, start_x) * m_width) continue;
+        //if (tp.second >= start_y + m_height * int_y || tq.second >= start_y + m_height * int_y) continue;
 
-        // Draw the line between points p and q
-        for (std::uint32_t x{ p.first }; x <= q.first; ++x) {
-            //const std::uint32_t y = func(x);
-            try {
-                m_body.at(pi - y_diff) = '*';
-            } catch(std::out_of_range) {}
+        // This function will return an integer y-value when given a double x-value
+        const auto func{ make_linear(tp, tq) };
+
+        // For each character between the two points
+        for (std::uint32_t x{ tp.first }; x < tq.first; ++x) {
+            const std::uint32_t y{ func(x) };
+            set_coord(x, y, '*', int_x, start_x);
         }
     }
 }
@@ -153,17 +152,29 @@ std::string kolin::graph::make_body(std::uint8_t int_x, std::uint8_t int_y, std:
     return m_body; 
 }
 
-std::uint32_t kolin::graph::point_to_index(std::uint32_t x, std::uint32_t y, 
-                                           std::uint8_t int_x, std::uint8_t int_y, 
-                                           std::uint32_t start_x, std::uint32_t start_y) const
+kolin::graph::point kolin::graph::point_to_coord(std::uint32_t x, std::uint32_t y, 
+                                                 std::uint8_t int_x, std::uint8_t int_y, 
+                                                 std::uint32_t start_x, std::uint32_t start_y) const
 {
     if (x < start_x) throw kolin::graph::out_of_range;
     if (y < start_y) throw kolin::graph::out_of_range;
 
+    if (x >= start_x + int_x * m_width) throw kolin::graph::out_of_range;
+    if (y >= start_y + int_y * m_height) throw kolin::graph::out_of_range;
+
     const std::uint32_t gx{ get_col_width(int_x, start_x) * ((x / int_x) - start_x + 1) + (get_row_num_width()) };
     const std::uint32_t gy{ get_height() - (y / int_y) - 1 + (start_y / int_y) };
 
-    return coord_to_index(gx, gy, int_x, start_x);
+    return { gx, gy };
+}
+
+std::uint32_t kolin::graph::point_to_index(std::uint32_t x, std::uint32_t y, 
+                                           std::uint8_t int_x, std::uint8_t int_y, 
+                                           std::uint32_t start_x, std::uint32_t start_y) const
+{
+    const kolin::graph::point gp{ point_to_coord(x, y, int_x, int_y, start_x, start_y) };
+
+    return coord_to_index(gp.first, gp.second, int_x, start_x);
 }
 
 void kolin::graph::set_point(std::uint32_t x, std::uint32_t y, char c, 
