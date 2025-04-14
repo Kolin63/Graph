@@ -95,7 +95,9 @@ std::string kolin::graph::make_body(std::uint8_t int_x, std::uint8_t int_y, std:
     return m_body; 
 }
 
-std::uint32_t kolin::graph::point_to_index(std::uint32_t x, std::uint32_t y, std::uint8_t int_x, std::uint8_t int_y, std::uint32_t start_x, std::uint32_t start_y) const
+std::uint32_t kolin::graph::point_to_index(std::uint32_t x, std::uint32_t y, 
+                                           std::uint8_t int_x, std::uint8_t int_y, 
+                                           std::uint32_t start_x, std::uint32_t start_y) const
 {
     if (x < start_x) throw kolin::graph::out_of_range;
     if (y < start_y) throw kolin::graph::out_of_range;
@@ -106,7 +108,9 @@ std::uint32_t kolin::graph::point_to_index(std::uint32_t x, std::uint32_t y, std
     return coord_to_index(gx, gy, int_x, start_x);
 }
 
-void kolin::graph::set_point(std::uint32_t x, std::uint32_t y, char c, std::uint8_t int_x, std::uint8_t int_y, std::uint32_t start_x, std::uint32_t start_y)
+void kolin::graph::set_point(std::uint32_t x, std::uint32_t y, char c, 
+                             std::uint8_t int_x, std::uint8_t int_y, 
+                             std::uint32_t start_x, std::uint32_t start_y)
 {
     m_body[point_to_index(x, y, int_x, int_y, start_x, start_y)] = c;
 }
