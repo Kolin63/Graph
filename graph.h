@@ -45,7 +45,6 @@ namespace kolin
     public:
         enum error {
             out_of_range,
-            invalid_interval,
         };
 
         graph(std::uint32_t width, std::uint32_t height, const dataset& data)

@@ -66,7 +66,7 @@ kolin::graph::dataset kolin::graph::average_dataset(const kolin::graph::dataset&
 std::string kolin::graph::make_body(std::uint8_t int_x, std::uint8_t int_y, std::uint32_t start_x, std::uint32_t start_y)
 {
     // Interval may not be 0
-    if (int_x == 0 || int_y == 0) throw kolin::graph::invalid_interval;
+    if (int_x == 0 || int_y == 0) return "Error: Intervals may not be equal to 0";
 
     // Y-Axis Numbers and Dividers and Rows
     for (std::int64_t i{ static_cast<std::int64_t>(m_height) - 1}; i >= 0; --i) {
