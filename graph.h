@@ -35,9 +35,14 @@ namespace kolin
         // Note: (0, 0) is the top-left corner
         void set_coord(std::uint32_t x, std::uint32_t y, char c, std::uint32_t start_x);
 
+        // Takes a dataset of kolin::graph::points and averages it 
+        // into a dataset based on the interval and width of the graph 
+        static dataset average_dataset(const dataset& data, std::uint32_t width, std::uint32_t start_x, std::uint8_t int_x, std::uint8_t int_y);
+
     public:
         enum error {
             out_of_range,
+            invalid_interval,
         };
 
         graph(std::uint32_t width, std::uint32_t height, const dataset& data)
